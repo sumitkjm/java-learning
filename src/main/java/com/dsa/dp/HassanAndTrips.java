@@ -1,5 +1,9 @@
 package com.dsa.dp;
 
+import java.text.DecimalFormat;
+import java.util.Arrays;
+import java.util.Scanner;
+
 /**
  *  Hasan and Trip
  * Send Feedback
@@ -34,4 +38,93 @@ package com.dsa.dp;
  * 4.675445
  */
 public class HassanAndTrips {
+
+    private static int m = 1000000007;
+
+   private static DecimalFormat df = new DecimalFormat("#.000000");
+
+    static class Point implements Comparable<Point> {
+        int x;
+        int y;
+        int h;
+
+
+        @Override
+        public int compareTo(Point o) {
+            if(o.x>x) {
+                return -1;
+            } else if(o.x<x) {
+                return 1;
+            } else {
+                if(o.y>y) {
+                    return -1;
+                } else if(o.y<y) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            }
+        }
+    }
+
+    public static double getHappynessByDistance(int x1, int y1, int x2, int y2) {
+        long a = Math.abs(x2-x1);
+        long b = Math.abs(y2-y1);
+        long x = (a * a);
+        long y = (b * b);
+        long sum = (x + y);
+        return Math.sqrt(sum);
+    }
+
+    public static double max(double a, double b) {
+        return a>b?a:b;
+    }
+
+    public static double getMaxHappynessByIterative(Point[] points, int n) {
+        double[] dp = new double[n];
+        dp[0] = points[0].h;
+        for (int i=1;i<n;i++) {
+            dp[i] = Integer.MIN_VALUE;
+            for (int j=0;j<i;j++) {
+                double x = getHappynessByDistance(points[j].x,points[j].y,points[i].x,points[i].y);
+                dp[i] = max(dp[i],dp[j]-x);
+            }
+            dp[i]+=points[i].h;
+        }
+        return dp[n-1];
+    }
+
+    public static double getMaxHappyness(Point[] points, int n, double[] dp) {
+        if(n<=0) {
+            return 0;
+        }
+        if(dp[n]!=0) {
+            return dp[n];
+        }
+        double maxH = Integer.MIN_VALUE;
+        for(int i=0;i<n-1;i++) {
+            double x =  getHappynessByDistance(points[i].x,points[i].y,points[n].x,points[n].y);
+            maxH = max(getMaxHappyness(points,i,dp)-x,maxH);
+            maxH+=points[i].h;
+        }
+        dp[n] = maxH;
+        return dp[n];
+    }
+
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        int n = in.nextInt();
+        Point[] points = new Point[n];
+        for (int i=0;i<n;i++) {
+            Point point = new Point();
+            point.x = in.nextInt();
+            point.y = in.nextInt();
+            point.h = in.nextInt();
+            points[i] = point;
+        }
+        double []dp = new double[n+1];
+//        Arrays.sort(points);
+        System.out.println(df.format(getMaxHappynessByIterative(points,n)));
+        System.out.println(df.format(getMaxHappyness(points,n,dp)));
+    }
 }

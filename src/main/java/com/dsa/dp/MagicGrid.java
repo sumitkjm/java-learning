@@ -78,6 +78,7 @@ public class MagicGrid {
         while (t!=0){
             int[][] grid = takeInput();
             System.out.println(MagicGrid.getMinimumStrength(grid));
+            System.out.println(MagicGrid.getMinStrengthIterative(grid));
             t--;
         }
 
@@ -101,6 +102,37 @@ public class MagicGrid {
 
         return getMinStrength(grid, 0, 0, grid.length-1, grid[0].length-1, dp);
 
+    }
+
+    public static int getMinStrengthIterative(int[][]grid) {
+        int m = grid.length;
+        int n = grid[0].length;
+        int[][] dp = new int[m][n];
+        dp[m-1][n-1] = 1;
+        for (int i=m-2;i>=0;i--) {
+            dp[i][n-1] = dp[i+1][n-1] - grid[i][n-1];
+        }
+
+        for (int i=n-2;i>=0;i--) {
+            dp[m-1][i] = dp[m-1][i+1] - grid[m-1][i];
+        }
+        for (int i=m-2;i>=0;i--) {
+            for (int j=n-2;j>=0;j--) {
+                dp[i][j] = 1;
+                if(dp[i+1][j]<dp[i][j+1]) {
+                    int minValue = dp[i+1][j] - grid[i][j];
+                    if(minValue>1) {
+                        dp[i][j] = minValue;
+                    }
+                } else {
+                    int minValue = dp[i][j+1] - grid[i][j];
+                    if(minValue>1) {
+                        dp[i][j] = minValue;
+                    }
+                }
+            }
+        }
+        return dp[0][0];
     }
 
     public static int getMinStrength(int[][] grid, int si, int sj, int ei, int ej, int[][]dp) {

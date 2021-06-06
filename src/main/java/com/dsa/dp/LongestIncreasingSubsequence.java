@@ -13,6 +13,32 @@ public class LongestIncreasingSubsequence {
         }
         int [] lisArr = new int[n];
         System.out.println(lis(arr,lisArr,n));
+        System.out.println(lisIterative(arr));
+    }
+
+    public static int lisIterative(int[] arr) {
+        int n = arr.length;
+        int [] dp = new int[n];
+        dp[0] = 1;
+        for (int i=1;i<n;i++ ) {
+            int possibleLis = 1;
+            for (int j = i-1;j>=0;j--) {
+                if(arr[i]<=arr[j]) {
+                    continue;
+                }
+                if((dp[j]+1)>possibleLis) {
+                    possibleLis = dp[j] +1;
+                }
+            }
+            dp[i] = possibleLis;
+        }
+        int lis = 1;
+        for (int i=0;i<n;i++) {
+            if(dp[i]>lis) {
+                lis = dp[i];
+            }
+        }
+        return lis;
     }
 
     public static int lis(int[] arr, int[] lisArr, int n) {

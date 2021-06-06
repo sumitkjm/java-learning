@@ -53,6 +53,19 @@ import java.util.Scanner;
 
 public class CoinChange {
 
+    public static int coinChangeIterative(int n, int[] denominations) {
+        int[] dp = new int[n+1];
+        dp[0] = 1;
+        for (int i=0;i<denominations.length;i++) {
+            int coin = denominations[i];
+            for (int higherAmt = coin;higherAmt<=n;higherAmt++) {
+                int remainder = higherAmt - coin;
+                dp[higherAmt]+=dp[remainder];
+            }
+        }
+        return dp[n];
+    }
+
     public static void main(String[] args) {
         Scanner in = new Scanner(System.in);
         int numD = in.nextInt();
@@ -70,6 +83,7 @@ public class CoinChange {
             }
         }
         System.out.println(change(n,dArr,numD,output));
+        System.out.println(coinChangeIterative(n,dArr));
     }
 
     public static long change(int n, int[] dArr, int numD, long[][] output) {

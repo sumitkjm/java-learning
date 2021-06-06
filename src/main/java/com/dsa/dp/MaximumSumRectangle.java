@@ -7,7 +7,47 @@ import java.io.*;
 class MaximumSumRectangle
 {
 
-    // Function to find maximum sum rectangular
+    private static int maxSumRectKadnes(int[][] mat) {
+        int m = mat.length;
+        int n = mat[0].length;
+        int maxSumRect = Integer.MIN_VALUE;
+        for (int l=0;l<n-1;l++) {
+            int[] sumArr = new int[m];
+            for (int r=l+1;r<n;r++) {
+                //updateSumArray
+                updateSumArray(sumArr,mat,m,r);
+                // Kadane's Algo to find max sum
+                int maxSumSoFar = findMaxSum(sumArr,m);
+                if(maxSumSoFar>maxSumRect) {
+                    maxSumRect = maxSumSoFar;
+                }
+            }
+        }
+
+        return maxSumRect;
+    }
+
+    private static int findMaxSum(int[] sumArr, int m) {
+        int maxSumSoFar = Integer.MIN_VALUE;
+        int maxEndingHere = 0;
+        for (int i=0;i<m;i++) {
+            maxEndingHere+= sumArr[i];
+            if(maxSumSoFar<maxEndingHere) {
+                maxSumSoFar = maxEndingHere;
+            }
+            if(maxEndingHere<0) {
+                maxEndingHere = 0;
+            }
+        }
+        return maxSumSoFar;
+    }
+
+    private static void updateSumArray(int[] sumArr, int[][]mat, int m, int r) {
+        for (int i=0;i<m;i++) {
+            sumArr[i] += mat[i][r];
+        }
+    }
+
     // submatrix
     private static int maxSumRectangle(int[][] mat)
     {
@@ -92,6 +132,7 @@ class MaximumSumRectangle
 
         // Function call
         System.out.println(maxSumRectangle(arr));
+        System.out.println(maxSumRectKadnes(arr));
     }
 }
 
